@@ -1,7 +1,3 @@
-Of course. Here is a comprehensive specification and architecture document based on our conversation, designed to guide the development of the `noted` toolkit.
-
----
-
 # **`noted` — System Architecture & Specification**
 
 ### **Tagline: Plain Text Productivity Intelligence**
@@ -15,11 +11,11 @@ Instead of replacing proven tools like `zk`, `task`, or `git`, `noted` fills the
 The system is built on a "documentation-first" principle, bundling guides and best practices to help users master a powerful plain-text workflow. While designed for notes, its intelligence features extend seamlessly to any text-based repository, including source code, linking documentation, tasks, and code files.
 
 ### Core Principles
-* [cite_start]**Integrate, Don’t Replace:** `noted` complements existing tools rather than creating a new monolith[cite: 503].
-* [cite_start]**Unix Philosophy:** It is composed of small, single-purpose scripts that are pipe-friendly and work with text streams[cite: 280, 504].
-* [cite_start]**Documentation First:** The toolkit ships with comprehensive, offline-accessible guides for workflows and best practices[cite: 505].
-* [cite_start]**Minimal Maintenance:** The system consists of a few auditable scripts and a core binary, avoiding complex dependencies[cite: 506].
-* [cite_start]**Progressive Adoption:** Users can start by using only the documentation and adopt the CLI tools as needed[cite: 507].
+* **Integrate, Don’t Replace:** `noted` complements existing tools rather than creating a new monolith.
+* **Unix Philosophy:** It is composed of small, single-purpose scripts that are pipe-friendly and work with text streams.
+* **Documentation First:** The toolkit ships with comprehensive, offline-accessible guides for workflows and best practices.
+* **Minimal Maintenance:** The system consists of a few auditable scripts and a core binary, avoiding complex dependencies.
+* **Progressive Adoption:** Users can start by using only the documentation and adopt the CLI tools as needed.
 
 ***
 
@@ -38,14 +34,14 @@ The system is built on a "documentation-first" principle, bundling guides and be
 
 `noted`'s architecture is modular, consisting of lightweight wrappers coordinating with a powerful core binary and external tools.
 
-* [cite_start]**Shell Script Wrappers:** The main `noted` command is a Bash script that acts as a dispatcher, providing a consistent user interface for all sub-commands[cite: 76, 188].
-* **Core Rust Binary:** A compiled, high-performance binary handles computationally intensive tasks like similarity scoring (TF-IDF/cosine similarity) and indexing. [cite_start]This avoids the slowness of shell scripts for these operations[cite: 78, 292].
+* **Shell Script Wrappers:** The main `noted` command is a Bash script that acts as a dispatcher, providing a consistent user interface for all sub-commands.
+* **Core Rust Binary:** A compiled, high-performance binary handles computationally intensive tasks like similarity scoring (TF-IDF/cosine similarity) and indexing. This avoids the slowness of shell scripts for these operations.
 * **External Tool Integration:** `noted` seamlessly wraps and enhances existing command-line tools:
-    * [cite_start]**`zk`:** Used optionally for manual backlink discovery and graph generation[cite: 255].
-    * [cite_start]**`task` / `todo.sh`:** The standard for `todo.txt` task management, enhanced by `noted`'s smart linking[cite: 138, 288].
-    * [cite_start]**Deduplication Utilities:** Wraps tools like `fdupes` or `jdupes` for an optional `noted import` command[cite: 248, 295].
-    * [cite_start]**`git`:** The recommended backend for versioning, synchronization, and conflict resolution[cite: 177, 297].
-* **Metadata Layer:** A hidden `.noteindex/` directory within the notes folder stores all metadata as human-readable, pipe-delimited text files. [cite_start]This avoids database lock-in and keeps the system transparent[cite: 162, 170, 293].
+    * **`zk`:** Used optionally for manual backlink discovery and graph generation.
+    * **`task` / `todo.sh`:** The standard for `todo.txt` task management, enhanced by `noted`'s smart linking.
+    * **Deduplication Utilities:** Wraps tools like `fdupes` or `jdupes` for an optional `noted import` command.
+    * **`git`:** The recommended backend for versioning, synchronization, and conflict resolution.
+* **Metadata Layer:** A hidden `.noteindex/` directory within the notes folder stores all metadata as human-readable, pipe-delimited text files. This avoids database lock-in and keeps the system transparent.
 
 ### Gap-Filling Value Proposition
 `noted` is justified by the functionality it provides that is missing when using standard tools alone.
@@ -64,20 +60,20 @@ The system is built on a "documentation-first" principle, bundling guides and be
 
 ### Managed File Store
 * **Notes Directory (`NOTES_DIR`):** Defaults to `~/notes/` but is configurable. This directory contains all notes and the metadata index.
-* **File Structure:** The default is a **flat** structure. [cite_start]The year/month folder structure is an optional configuration (`FOLDER_STRUCTURE="year/month"`)[cite: 152, 309].
-* **Note Naming:** Note files use a `YYYYMMDD-title-slug.md` format. [cite_start]This ensures chronological sort order and uniqueness while remaining human-readable[cite: 144, 285]. Duplicate titles on the same day are automatically suffixed (e.g., `-2`).
+* **File Structure:** The default is a **flat** structure. The year/month folder structure is an optional configuration (`FOLDER_STRUCTURE="year/month"`).
+* **Note Naming:** Note files use a `YYYYMMDD-title-slug.md` format. This ensures chronological sort order and uniqueness while remaining human-readable. Duplicate titles on the same day are automatically suffixed (e.g., `-2`).
 
 ### Task File
-* [cite_start]A standard `~/todo.txt` file is used, ensuring full compatibility with the existing `todo.txt` ecosystem[cite: 38, 114].
+* A standard `~/todo.txt` file is used, ensuring full compatibility with the existing `todo.txt` ecosystem.
 
 ### Metadata Index (`.noteindex/`)
 This hidden directory lives inside `NOTES_DIR` and contains versioned, pipe-delimited text files.
 
-* [cite_start]`links.db`: Caches the resolution of `note:keyword` links from tasks to specific note files to avoid repeated prompts[cite: 162, 289].
-* [cite_start]`related.db`: Stores pre-computed similarity scores between notes and code files[cite: 162, 290].
-* [cite_start]`dedup.db`: Contains file content hashes to speed up deduplication during imports[cite: 162, 293].
+* `links.db`: Caches the resolution of `note:keyword` links from tasks to specific note files to avoid repeated prompts.
+* `related.db`: Stores pre-computed similarity scores between notes and code files.
+* `dedup.db`: Contains file content hashes to speed up deduplication during imports.
 
-**Atomic Updates:** To prevent corruption, all writes to these files are atomic. [cite_start]Data is written to a temporary file (`.tmp`) which is then renamed to replace the original[cite: 268, 301].
+**Atomic Updates:** To prevent corruption, all writes to these files are atomic. Data is written to a temporary file (`.tmp`) which is then renamed to replace the original.
 
 ***
 
@@ -130,7 +126,7 @@ The design allows for a clear, phased evolution beyond the MVP.
 * **Phase 1: Core Stability:** Comprehensive test suite, shell completions, and man pages.
 * **Phase 2: Intelligence:** Move from TF-IDF to semantic similarity using embeddings for more accurate `related` results.
 * **Phase 3: Integration:** Editor plugins (Vim, VSCode) that use the `noted` CLI as a backend.
-* [cite_start]**Phase 4: Scale:** An optional migration path from text-based `.db` files to a single SQLite file for users with tens of thousands of notes[cite: 172, 216]. [cite_start]Optional per-file encryption via `gpg` or `age` wrappers[cite: 270, 298].
+* **Phase 4: Scale:** An optional migration path from text-based `.db` files to a single SQLite file for users with tens of thousands of notes. Optional per-file encryption via `gpg` or `age` wrappers.
 
 
 
